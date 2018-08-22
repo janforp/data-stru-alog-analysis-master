@@ -6,7 +6,10 @@
 	<groupId>com.janita.dsaa</groupId>
 	<artifactId>data-stru-alog-analysis-master</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+    <modules>
+        <module>chapter2</module>
+    </modules>
+    <packaging>pom</packaging>
 
 	<name>data-stru-alog-analysis-master</name>
 	<description>Demo project for Spring Boot</description>
