@@ -89,6 +89,19 @@ public class Simple2_4_3 {
        return max;
    }
 
+   public static int maxSubSum4(int[] arr) {
+       int maxSum = 0, thisSum = 0;
+       for (int i = 0; i < arr.length; i++) {
+           thisSum += arr[i];
+           if (thisSum > maxSum) {
+               maxSum = thisSum;
+           }else if (thisSum < 0) {
+               thisSum = 0;
+           }
+       }
+       return maxSum;
+   }
+
     public static void main(String[] args) {
 //        int[] arr = {2,3,4,5,6,7,12,33,44,55,66,77,88,9,7,7,5,4,3,5,6,7,8,8,9,8,98,6,6,65,6,7,8,7,68,8,67,8,8,};
 //        int max;
@@ -104,6 +117,7 @@ public class Simple2_4_3 {
 //
 //        System.out.println(max3(6,4,9));
 
-        System.out.print(maxSumRec(new int[] {3,-1,3,-9,2},0,4));
+//        System.out.print(maxSumRec(new int[] {3,-1,3,-9,2},0,4));
+        System.out.print((maxSubSum4(new int[] {3,-1,3,-9,2})));
     }
 }
