@@ -9,6 +9,7 @@
     <modules>
         <module>chapter2</module>
         <module>chapter3-list-heap</module>
+        <module>chapter4-tree</module>
     </modules>
     <packaging>pom</packaging>
 

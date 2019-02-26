@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 
@@ -59,7 +60,7 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
     }
 
     public AnyType set(int idx, AnyType newVal) {
-        if (idx <0 || idx >= size()) {
+        if (idx < 0 || idx >= size()) {
             throw new ArrayIndexOutOfBoundsException();
         }
         AnyType old = theItems[idx];
@@ -69,64 +70,60 @@ public class MyArrayList<AnyType> implements Iterable<AnyType> {
 
     public boolean add(AnyType x) {
 
+        this.add(size(), x);
+        return true;
     }
 
     public void add(int idx, AnyType x) {
+        if (size() == theItems.length) {
+            ensureCapacity(2 * size() + 1);
+        }
 
+        for (int i = theSize; i > idx; i--) {
+            theItems[i] = theItems[i - 1];
+        }
+        theItems[idx] = x;
+
+        theSize++;
     }
 
+    public AnyType remove(int idx) {
 
-    /**
-     * Returns an iterator over elements of type {@code T}.
-     *
-     * @return an Iterator.
-     */
+        AnyType remove = theItems[idx];
+
+        for (int i = idx; i < theSize - 1; i++) {
+            theItems[i] = theItems[i + 1];
+        }
+        theSize--;
+        return remove;
+    }
+
     @Override
-    public Iterator<AnyType> iterator() {
-        return null;
+    public Iterator iterator() {
+        return new ArrayListIterator();
     }
 
-    /**
-     * Performs the given action for each element of the {@code Iterable}
-     * until all elements have been processed or the action throws an
-     * exception.  Unless otherwise specified by the implementing class,
-     * actions are performed in the order of iteration (if an iteration order
-     * is specified).  Exceptions thrown by the action are relayed to the
-     * caller.
-     *
-     * @param action The action to be performed for each element
-     * @throws NullPointerException if the specified action is null
-     * @implSpec <p>The default implementation behaves as if:
-     * <pre>{@code
-     *     for (T t : this)
-     *         action.accept(t);
-     * }</pre>
-     * @since 1.8
-     */
-    @Override
-    public void forEach(Consumer<? super AnyType> action) {
+    private class ArrayListIterator implements  Iterator<AnyType> {
 
+        private int current = 0;
+
+        @Override
+        public boolean hasNext() {
+            return current < size();
+        }
+
+        @Override
+        public AnyType next() {
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return theItems[current++];
+        }
+
+        @Override
+        public void remove() {
+            MyArrayList.this.remove(--current);
+        }
     }
 
-    /**
-     * Creates a {@link Spliterator} over the elements described by this
-     * {@code Iterable}.
-     *
-     * @return a {@code Spliterator} over the elements described by this
-     * {@code Iterable}.
-     * @implSpec The default implementation creates an
-     * <em><a href="Spliterator.html#binding">early-binding</a></em>
-     * spliterator from the iterable's {@code Iterator}.  The spliterator
-     * inherits the <em>fail-fast</em> properties of the iterable's iterator.
-     * @implNote The default implementation should usually be overridden.  The
-     * spliterator returned by the default implementation has poor splitting
-     * capabilities, is unsized, and does not report any spliterator
-     * characteristics. Implementing classes can nearly always provide a
-     * better implementation.
-     * @since 1.8
-     */
-    @Override
-    public Spliterator<AnyType> spliterator() {
-        return null;
-    }
 }
