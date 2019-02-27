@@ -1,5 +1,12 @@
 package com.janita.chapter4.binarytree;
 
+import java.lang.ref.ReferenceQueue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author janita
  * @since 2018/9/2 - 下午5:03
@@ -144,5 +151,66 @@ public class BinarySearchTree<AnyType extends Comparable<? super AnyType>> {
 
             return true;
         }
+    }
+
+    private static boolean oneCharOff(String word1, String word2) {
+        if (word1.length() != word2.length()) {
+            return false;
+        }
+        int diffs = 0;
+        for (int i = 0; i < word1.length(); i++) {
+            if (word1.charAt(i) != word2.charAt(i)) {
+                if (++ diffs > 1) {
+                    return false;
+                }
+            }
+        }
+        return diffs == 1;
+    }
+
+    public static void main(String[] args) {
+        AtomicInteger d = new AtomicInteger();
+    }
+
+    public static void pringHighChangeables(Map<String, List<String>> adjWords, int minWords) {
+        for (Map.Entry<String, List<String>> entry : adjWords.entrySet()) {
+            List<String> words = entry.getValue();
+            if (words.size() >= minWords) {
+                System.out.println(entry.getKey() + "(");
+                System.out.println(words.size() + "):");
+                for (String word : words) {
+                    System.out.println(" " + word);
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    private static <KeyType> void update(Map<KeyType, List<String>> m, KeyType key, String value) {
+        List<String> lst = m.computeIfAbsent(key, k -> new ArrayList<>());
+        lst.add(value);
+    }
+
+    public static Map<String, List<String>> computeAdjacentWords(List<String> theWords) {
+        Map<String, List<String>> adjWords = new TreeMap<>();
+        String[] words = new String[theWords.size()];
+        theWords.toArray(words);
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i + 1; j < words.length; j++) {
+                if (oneCharOff(words[i], words[j])) {
+                    update(adjWords, words[i], words[j]);
+                    update(adjWords, words[j], words[i]);
+                }
+            }
+        }
+        return adjWords;
+    }
+
+    public static int hash(String key, int tableSize) {
+        int hashVal = 0;
+        for (int i = 0; i < key.length(); i++) {
+            hashVal += key.charAt(i);
+        }
+        return hashVal % tableSize;
     }
 }
